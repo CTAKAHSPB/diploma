@@ -31,17 +31,17 @@ resource "yandex_compute_instance" "master_host" {
     nat = true
   }
   resources {
-    cores = 2
-    memory = 2
+    cores = 4
+    memory = 8
   }
   metadata = {
-	user-data = "${file("./cloud_user")}"
+	user-data = "${file("./userinfo")}"
   }
 }
 
-resource "yandex_compute_instance" "app_host" {
+resource "yandex_compute_instance" "worker_host" {
 
-  name = "app"
+  name = "worker"
   platform_id = "standard-v1" # тип процессора (Intel Broadwell)
 
   boot_disk {
@@ -54,11 +54,11 @@ resource "yandex_compute_instance" "app_host" {
     nat = true
   }
   resources {
-    cores = 2
-    memory = 2
+    cores = 4
+    memory = 8
   }
   metadata = {
-	user-data = "${file("./cloud_user")}"
+	user-data = "${file("./userinfo")}"
   }
 }
 
@@ -81,7 +81,7 @@ resource "yandex_compute_instance" "srv_host" {
     memory = 2
   }
   metadata = {
-	user-data = "${file("./cloud_user")}"
+	user-data = "${file("./userinfo")}"
   }
 }
 
@@ -96,7 +96,7 @@ resource "yandex_lb_target_group" "foo" {
 
   target {
     subnet_id = var.subnet_id
-    address   = "${yandex_compute_instance.app_host.network_interface.0.ip_address}"
+    address   = "${yandex_compute_instance.worker_host.network_interface.0.ip_address}"
   }
 
   target {
@@ -105,15 +105,15 @@ resource "yandex_lb_target_group" "foo" {
   }
 }
 
-output "master_host_public_ip" {
+output "master_ip" {
     value = yandex_compute_instance.master_host.network_interface[0].nat_ip_address
 }
 
-output "app_host_public_ip" {
-    value = yandex_compute_instance.app_host.network_interface[0].nat_ip_address
+output "worker_ip" {
+    value = yandex_compute_instance.worker_host.network_interface[0].nat_ip_address
 }
 
-output "srv_host_public_ip" {
+output "srv_ip" {
     value = yandex_compute_instance.srv_host.network_interface[0].nat_ip_address
 }
 

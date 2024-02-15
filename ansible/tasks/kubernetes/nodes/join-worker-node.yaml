@@ -1,0 +1,11 @@
+# --------------------------------------
+# -- Join worker kubernetes node
+# --------------------------------------Î
+- debug:
+    var: join_command
+
+- name: Join worker node
+  shell: >
+    {{ join_command }}
+    creates=/etc/kubernetes/kubelet.conf
+

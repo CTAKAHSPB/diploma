@@ -1,0 +1,7 @@
+tf/vars.tf
+tf/userinfo
+tf/.terraform*
+tf/terraform.tfstate*
+ansible/hosts.yaml
+ansible/admin.conf
+testapp/app/app/__*

@@ -1,0 +1,69 @@
+# --------------------------------------
+# -- Prepare system
+# -- for kubernetes installation
+# --------------------------------------
+# -- Implemeneted:
+# ---- Debian
+# --------------------------------------
+---
+# --------------------------------------
+# -- Debian
+# --------------------------------------
+- name: Prepare Debian
+  block:
+    - name: Ensure dependencies are installed.
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+        state: present
+
+    - name: Add Kubernetes apt key.
+      apt_key:
+        url: "{{ kubernetes_apt_gpg_key }}"
+        state: present
+      register: add_repository_key
+
+    - name: Add Kubernetes repository.
+      apt_repository:
+        repo: "{{ kubernetes_apt_repository }}"
+        state: present
+        update_cache: true
+
+  when: ansible_os_family == 'Debian'
+
+- name: Install Jenkins
+  block:
+    - name: Ensure dependencies are installed.
+      apt:
+        name:
+          - openjdk-17-jdk
+          - default-jre
+          - gnupg2
+          - apt-transport-https
+          - wget
+        state: present
+        update_cache: true
+
+#    - name: Get Jenkins apt key.
+#      shell: "wget -O /usr/share/keyrings/jenkins-keyring.asc {{ jenkins_apt_gpg_key }}"
+
+#    - name: Add Jenkins apt key.
+#      shell: "echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] {{ jenkins_apt_repository }} | tee /etc/apt/sources.list.d/jenkins.list > /dev/null"
+
+#    - name: Install Jenkins.
+#      apt:
+#        name:
+#          - jenkins
+#        state: present
+#        update_cache: true
+#
+#    - name: Enable Jenkins.
+#      shell: systemctl enable jenkins
+#
+#    - name: Start Jenkins.
+#      shell: systemctl start jenkins
+
+  when: node_type == 'srv'
+

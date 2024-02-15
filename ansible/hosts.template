@@ -1,0 +1,28 @@
+# --------------------------------------
+# -- Inventory file example
+# -- This is gonna be two-nodes cluster 
+# --------------------------------------
+---
+k8s_master:
+  hosts:
+    ${master_ip}
+  vars:
+    node_type: "master"
+    ansible_user: ${USER}
+    key_path: /home/${USER}/.ssh/id_rsa.pub,
+
+k8s_worker:
+  hosts:
+    ${worker_ip}
+  vars:
+    node_type: "worker"
+    ansible_user: ${USER}
+    key_path: /home/${USER}/.ssh/id_rsa.pub,
+
+k8s_node:
+  hosts:
+    ${srv_ip}
+  vars:
+    node_type: "srv"
+    ansible_user: ${USER}
+    key_path: /home/${USER}/.ssh/id_rsa.pub,
