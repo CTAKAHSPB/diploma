@@ -11,28 +11,28 @@ pipeline {
         stage('Build docker image') {
 			steps{
 				dir("testapp") {
-					sh('echo hello')
+					sh('docker build . -f Dockerfile')
 				}
 			}
 		}
         stage('Upload docker image') {
 			steps{
 				dir("testapp") {
-					sh('echo hello')
+					sh('docker push thepit/testapp')
 				}
 			}
 		}
         stage('Copy helm chart to master) {
 			steps{
 				dir("helm") {
-					sh('echo hello')
+					sh('scp -r testapp master:/tmp')
 				}
 			}
 		}
         stage('Upgrade helm chart) {
 			steps{
 				dir("helm") {
-					sh('echo hello')
+					sh('ssh testapp "cd /tmp; helm upgrade testapp . --install"')
 				}
 			}
 		}
