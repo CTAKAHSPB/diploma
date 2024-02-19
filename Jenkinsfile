@@ -29,7 +29,7 @@ pipeline {
 				}
 			}
 		}
-        stage('Upgrade helm chart) {
+        stage('Upgrade helm chart') {
 			steps{
 				dir("helm") {
 					sh('ssh testapp "cd /tmp; helm upgrade testapp . --install"')
